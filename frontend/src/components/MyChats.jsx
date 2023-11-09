@@ -1,12 +1,20 @@
-import {Card, Tooltip, CardHeader, CardBody, CardFooter, Divider, Link, Image, Input, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
+import {Card, Avatar, Tooltip, CardHeader, CardBody, CardFooter, Divider, Link, Image, Input, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/react";
 import { useState } from "react";
 import SearchModal from "./SearchModal";
+import ProfileModal from "./ProfileModal";
+import { useNavigate } from "react-router-dom";
 
 
 
 const MyChats = () => {
     const [isSearch, setIsSearch] = useState(false);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const navigate = useNavigate();
+    
+    const logoutHandler = ()=>{
+        localStorage.removeItem("userInfo");
+        navigate("/");
+    }
 
 
   return (
@@ -31,31 +39,28 @@ const MyChats = () => {
                 </button>
             </Tooltip>
         </div>
-        <div className="mt-5 mx-5">
-            <Button onPress={onOpen} className="border-white border-medium w-full bg-transparent text-white text-1xl" size="md" label="serach a user">
+        <div className="my-5 mx-5">
+            <Button onPress={onOpen} className="border-white  w-full bg-blue-500 text-white text-1xl" size="md" label="serach a user">
                 Search a user...
             </Button>
             <SearchModal isOpen={isOpen}  onOpenChange={onOpenChange} />
-                {/* <ModalContent>
-                {(onClose) => (
-                    <>
-                    <ModalHeader className="flex flex-col gap-1">Search User</ModalHeader>
-                    <ModalBody>
-                        <Input>
-                        </Input>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
-                        Close
-                        </Button>
-                        <Button color="primary" onPress={onClose}>
-                        Action
-                        </Button>
-                    </ModalFooter>
-                    </>
-                )}
-                </ModalContent>
-            </SearchModal> */}
+        </div>
+        <div className="flex-grow bg-blue-400">
+
+        </div>
+        <div>
+            <Card className="my-4 mx-5 bg-blue-400 text-white font-semibold">
+                <CardHeader className="flex justify-between">
+                    <button className="flex gap-3 items-center bg-transparent text-white text-xl">
+                        <Avatar src="https://robohash.org/default" className=""/>
+                        <p className="">Current User</p>
+                    </button>
+                    <Button color="danger" onClick={logoutHandler} size="md" className=" font-medium">
+                        Logout
+                    </Button>
+                </CardHeader>
+                
+            </Card>
         </div>
     </div>
   )
