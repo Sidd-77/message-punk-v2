@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = mongoose.Schema({
-    name:{
+    username:{
         type: String,
         required: true,
     },
     email:{
         type: String,
         required: true,
+        unique: true,
     },
     password:{
         type: String,
@@ -15,12 +17,13 @@ const userSchema = mongoose.Schema({
     },
     pic:{
         type: String,
-        required: true,
         default: "https://robohash.org/default",
     }
 },{
     timestamps: true,
 })
+
+
 
 const User = mongoose.model("User", userSchema);
 

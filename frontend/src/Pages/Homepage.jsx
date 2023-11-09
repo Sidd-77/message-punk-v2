@@ -1,5 +1,11 @@
 import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button, Input } from "@nextui-org/react";
 import { useState } from "react";
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
+
+//import { useHistory } from 'react-router-dom';
+
+import axios from 'axios';
 
 
 const Homepage = () => {
@@ -8,21 +14,71 @@ const Homepage = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+    //const history = useHistory();
+
+    const signUpHandler = async ()=>{
+        if(!email || !password || !username){
+            toast.error('Please enter required fields');
+        }
+        else{
+            try{
+                const {data} = await axios.post('/api/user',{
+                    username,
+                    email,
+                    password
+                })
+                if(data){
+                    toast('Signed In!');
+                    localStorage.setItem('userInfo', JSON.stringify(data));
+                }
+                navigate("/chat");
+            }catch(err){
+                toast.error(err.response.data.message)
+            }
+        }
+    }
+        
+    
+
+    const loginHandler = async ()=>{
+        if(!email || !password){
+            toast.error("Please enter all fileds")
+        }else{
+            try{
+                const {data} = await axios.post('/api/user/login',{
+                    email,
+                    password
+                });
+                if(data){
+                    toast.success('Logged in successfully')
+                    localStorage.setItem('userInfo', JSON.stringify(data));
+                }
+                navigate("/chat");
+            }catch(err){
+                toast.error(err.response.data.message)
+            }
+        }
+    }
 
   return (
     <div className="flex flex-row h-screen">
-        <div className="w-3/6 text-white bg-gray-900  h-screen flex  flex-col items-start  ">
+        <Toaster 
+            position="bottom-center"
+            reverseOrder={false}
+        />
+        <div className="w-3/6 text-white bg-blue-600  h-screen flex  flex-col items-start  ">
             <div className="h-1/3"></div>
             <div className="h-1/3 ml-5">
                 <p className="text-8xl mb-5 font-bold ">Message Punk</p>
-                <p className="text-2xl font-medium">This is web-based chat-app build using React, Express, Node, MongoDB and NextUi</p>
+                <p className="text-2xl font-medium">This is web-based chat-app build using React, Express, Node, MongoDB, Socket.io and NextUI</p>
             </div>
             <div className="h-1/3">
             </div>
         </div>
-        <div className="w-3/6 h-screen bg-gray-800 flex items-center">
+        <div className="w-3/6 h-screen bg-gray-100 flex items-center">
 
-            <Card className="flex w-full m-10">
+            <Card className="flex w-full m-10 shadow-2xl shadow-blue-200">
                 <CardHeader className="flex-row gap-2">
                     <Button onClick={()=> setisLogin(true)} className=" basis-1/2" color="primary">
                         Login
@@ -57,12 +113,12 @@ const Homepage = () => {
                                     className="flex"
                                     />
 
-                                <Button color="primary" size="lg">
+                                <Button color="primary" size="lg" onClick={loginHandler}>
                                     Login
                                 </Button>
                             </form>
                     ):(
-                        <form className="flex flex-col gap-5 m-5 w-full ">
+                        <form className="flex flex-col gap-5 m-5 w-full " onSubmit={signUpHandler}>
                                 <Input
                                     key={0}
                                     type="email"
@@ -96,14 +152,14 @@ const Homepage = () => {
                                     className="flex"
                                     />
 
-                                <Button color={isLogin?"primary":"secondary"} size="lg">
+                                <Button color={isLogin?"primary":"secondary"} size="lg" onClick={signUpHandler}>
                                     Sign Up
                                 </Button>
                             </form>
                     )}
                 </CardHeader>
             </Card>
-            
+
         </div>
     </div>
   )

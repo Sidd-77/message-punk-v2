@@ -4,9 +4,10 @@ import App from './App.jsx'
 import {NextUIProvider} from '@nextui-org/react'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom';
+import ChatProvider from './context/ChatProvider.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <ChatProvider>
     <BrowserRouter>
 
       <NextUIProvider>
@@ -14,5 +15,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </NextUIProvider>
 
     </BrowserRouter>
-  </React.StrictMode>,
+  </ChatProvider>,
 )
