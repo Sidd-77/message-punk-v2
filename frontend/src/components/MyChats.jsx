@@ -3,13 +3,14 @@ import { useState } from "react";
 import SearchModal from "./SearchModal";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
-
+import ChatList from '../components/ChatList'
 
 
 const MyChats = () => {
     const [isSearch, setIsSearch] = useState(false);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("userInfo"));
     
     const logoutHandler = ()=>{
         localStorage.removeItem("userInfo");
@@ -45,15 +46,15 @@ const MyChats = () => {
             </Button>
             <SearchModal isOpen={isOpen}  onOpenChange={onOpenChange} />
         </div>
-        <div className="flex-grow bg-blue-400">
-
+        <div className="flex-grow mx-5 bg-blue-600 overflow-auto overscroll-contain scroll-smooth rounded-md">
+            <ChatList />
         </div>
         <div>
-            <Card className="my-4 mx-5 bg-blue-400 text-white font-semibold">
+            <Card className="my-4 mx-5 bg-blue-500 text-white font-semibold">
                 <CardHeader className="flex justify-between">
                     <button className="flex gap-3 items-center bg-transparent text-white text-xl">
                         <Avatar src="https://robohash.org/default" className=""/>
-                        <p className="">Current User</p>
+                        <p className="">{user.username}</p>
                     </button>
                     <Button color="danger" onClick={logoutHandler} size="md" className=" font-medium">
                         Logout

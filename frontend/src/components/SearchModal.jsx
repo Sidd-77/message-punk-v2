@@ -14,6 +14,7 @@ import axios from "axios";
 import { ChatState } from "../context/ChatProvider";
 import UserListItem from "./UserListItem";
 import { useNavigate } from "react-router-dom";
+import {uniqBy} from 'lodash'
 
 const SearchModal = (props) => {
   const [search, setSearch] = useState();
@@ -36,11 +37,10 @@ const SearchModal = (props) => {
                 Authorization : `Bearer ${user.token}`,
             }
         }
-        console.log(user);
+
         const {data} = await axios.get(`/api/user/?search=${search}`, config);
         setLoading(false);
         setSearchResult(data);
-        console.log(data);
     }catch(err){
         toast.error(err.message);
         return;
@@ -58,6 +58,10 @@ const SearchModal = (props) => {
         }
 
         const {data} = await axios.post(`/api/chat`,{userId},config);
+        
+        let tp = [data, ...chats];
+        tp = uniqBy(tp, '_id')
+        setChats(tp);
         setSelectedChat(data);
         setLoading(false);
         navigate("/chat");
